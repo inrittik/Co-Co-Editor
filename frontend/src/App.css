@@ -1,0 +1,35 @@
+.ide_space {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #1c1e29;
+  color: white;
+}
+
+.CodeMirror {
+  min-height: calc(90vh - 40px);
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 20px;
+}
+.editorOptions {
+  height: 10vh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 20px;
+}
+.language label {
+  margin: 5px;
+}
+.editorOptions .run{
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #1c1e29;
+}
+.editorOptions .run:hover{
+  cursor: pointer;
+  background-color: #fff;
+}
