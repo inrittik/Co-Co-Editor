@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 const { ACTIONS } = require('./actions')
 const { generateFile } = require("./services/generateFile");
-const { cCodeRunner } = require('./services/codeRunner');
+const { cCodeRunner, cppCodeRunner, javaCodeRunner, pythonCodeRunner, jsCodeRunner } = require('./services/codeRunner');
 
 dotenv.config({ path: path.join(__dirname, `./.env`) });
 
@@ -19,16 +19,26 @@ io.on('connection', (socket) => {
     socket.on(ACTIONS.RUN, async ({code, extension="c"}) => {
         try {
             const filePath = await generateFile(code, extension);
-            const output = await cCodeRunner(filePath)
-
+            let output
+            if (extension === "c") output = await cCodeRunner(filePath);
+            else if (extension === "cpp")
+              output = await cppCodeRunner(filePath);
+            else if (extension === "java")
+              output = await javaCodeRunner(filePath);
+            else if (extension === "py")
+              output = await pythonCodeRunner(filePath);
+            else if (extension === "js")
+              output = await jsCodeRunner(filePath);
             console.log(output)
             io.to(socket.id).emit(ACTIONS.RETURN, {
-                output
+                output,
+                success: true,
             })
         }
         catch (err) {
             io.to(socket.id).emit(ACTIONS.RETURN, {
-              output: err,
+                output: err,
+                success: false
             });
         }
     })

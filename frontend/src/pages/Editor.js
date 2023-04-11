@@ -84,10 +84,11 @@ const Editor = () => {
             socketRef.current = await initSocket();
             // socketRef.current.emit(ACTIONS.JOIN)
           
-          socketRef.current.on(ACTIONS.RETURN, ({ output }) => {
-            setOutput(output);
+          socketRef.current.on(ACTIONS.RETURN, ({ success, output }) => {
+            if (success) setOutput(output);
+            else setOutput(output.stderr);
             setLoading(false);
-          })
+          });
         }
         init();
     }, [])
