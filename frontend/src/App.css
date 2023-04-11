@@ -7,7 +7,7 @@
 }
 
 .CodeMirror {
-  min-height: calc(90vh - 40px);
+  min-height: calc(90vh - 60px);
   font-size: 16px;
   line-height: 1.6;
   padding: 20px;
@@ -32,4 +32,40 @@
 .editorOptions .run:hover{
   cursor: pointer;
   background-color: #fff;
+}
+.console{
+  display: block;
+  height: 30vh;
+  width: 100vw;
+  overflow-y: auto;
+  position: absolute;
+  bottom: 0;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+  background-color: rgba(0, 0, 0, 0.717);
+}
+.console::-webkit-scrollbar {
+  display: none;
+}
+.consoleBorder{
+  background-color: #1c1e29;
+  height: 15px;
+  position: sticky;
+  top: 0;
+  cursor:grab;
+}
+.consoleArea {
+  padding: 10px;
+}
+.loader {
+  animation: blink 0.01s infinite linear;
+}
+
+@keyframes blink {
+  0%{
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

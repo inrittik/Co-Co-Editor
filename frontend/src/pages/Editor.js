@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { initSocket } from '../socket'
 import { ACTIONS } from "../Actions";
 import Codemirror from "codemirror";
+import Console from "../components/Console";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/lib/codemirror.css";
@@ -71,6 +72,8 @@ int main(){
 
 const Editor = () => {
   const [lang, setLang] = useState(0);
+  const [output, setOutput] = useState("");
+  const [loading, setLoading] = useState(false)
 
     const editor = useRef(null);
     
@@ -80,6 +83,11 @@ const Editor = () => {
         const init = async () => {
             socketRef.current = await initSocket();
             // socketRef.current.emit(ACTIONS.JOIN)
+          
+          socketRef.current.on(ACTIONS.RETURN, ({ output }) => {
+            setOutput(output);
+            setLoading(false);
+          })
         }
         init();
     }, [])
@@ -104,7 +112,7 @@ const Editor = () => {
       editor.current.setOption("mode", languages[lang].mode);
       editor.current.setValue(languages[lang].value);
 
-    console.log(editor.current);
+    // console.log(editor.current);
   }, [lang]);
 
   const handleLanguageChange = (e) => {
@@ -112,7 +120,9 @@ const Editor = () => {
     };
     
     const handleRun = () => {
-        console.log(editor.current.getValue());
+        // console.log(editor.current.getValue());
+      setOutput("");
+      setLoading(true);
         socketRef.current.emit(ACTIONS.RUN, {
             code: editor.current.getValue(),
             extension: languages[lang].extension
@@ -135,7 +145,7 @@ const Editor = () => {
       </div>
 
       <textarea id="realtimeEditor"></textarea>
-      <div className="consoleArea"></div>
+      <Console output={output} loading={loading} />
     </div>
   );
 };
