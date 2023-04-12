@@ -1,9 +1,21 @@
-.ide_space {
+.editor_page{
+  display: flex;
   height: 100vh;
-  margin: 0;
-  padding: 0;
+  width: 100vw;
   background-color: #1c1e29;
   color: white;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.sidebar {
+  width: 15%;
+}
+.ide_space {
+  width: 85%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .CodeMirror {
@@ -23,6 +35,17 @@
 .language label {
   margin: 5px;
 }
+.language select {
+  background-color: #ffffff1a;
+  color: #eff1f6bf;
+  border: none;
+  outline: none;
+  padding: 5px;
+  border-radius: 5px;
+}
+.language option{
+  color: black;
+}
 .editorOptions .run{
   border: none;
   padding: 5px 10px;
@@ -34,9 +57,9 @@
   background-color: #fff;
 }
 .console{
-  display: block;
+  /* display: block; */
   height: 30vh;
-  width: 100vw;
+  width: 85%;
   overflow-y: auto;
   position: absolute;
   bottom: 0;
@@ -45,6 +68,7 @@
   background-color: rgba(0, 0, 0, 0.957);
   white-space: pre-wrap;
   font-family: 'Courier New', monospace;
+  margin: 0;
 }
 .console::-webkit-scrollbar {
   display: none;
@@ -59,18 +83,6 @@
 }
 .consoleArea {
   padding: 10px;
-}
-.loader {
-  animation: blink 0.01s infinite linear;
-}
-
-@keyframes blink {
-  0%{
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }
 .errorInConsole{
   color: #cc0000;

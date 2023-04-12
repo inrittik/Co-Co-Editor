@@ -56,7 +56,7 @@ const Console = ({output, loading, success, executionTime}) => {
           {loading && <div className="loader"> ================= </div>}
           {consoleLog}
         </div>
-          {success && !loading && <div>Execution Time: {format(executionTime, 'ms')}&nbsp;ms</div>}
+          {output.length>0 && success && !loading && <div>Execution Time: {format(executionTime, 'ms')}&nbsp;ms</div>}
       </div>
     );
 }

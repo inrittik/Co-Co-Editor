@@ -17,6 +17,12 @@ const generateFile = async (code, extension) => {
     return filePath;
 }
 
+const deleteFile = async (filePath) => {
+    fs.unlinkSync(filePath)
+    return
+}
+
 module.exports = {
-    generateFile
+    generateFile,
+    deleteFile
 }

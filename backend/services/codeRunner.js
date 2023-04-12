@@ -40,12 +40,11 @@ const cppCodeRunner = (filePath) => {
 };
 
 const javaCodeRunner = (filePath) => {
-  const fileId = path.basename(filePath).split(".")[0];
   return new Promise((resolve, reject) => {
     exec(
       `javac -d ${outputDir} ${
-        filePath + fileId
-      }.java && java -cp ${outputDir} ${fileId}`,
+        filePath
+      } && java -cp ${outputDir} HelloWorld`,
       (error, stdout, stderr) => {
         if (error) reject({ error, stdout, stderr });
         if (stderr) reject(stderr);
