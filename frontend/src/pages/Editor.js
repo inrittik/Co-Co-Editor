@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { initSocket } from '../socket'
 import { ACTIONS } from "../Actions";
 import Codemirror from "codemirror";
+import { differenceInMilliseconds } from "date-fns";
 import Console from "../components/Console";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
@@ -74,6 +75,8 @@ const Editor = () => {
   const [lang, setLang] = useState(0);
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(true)
+  const [executionTime, setExecutionTime] = useState(0);
 
     const editor = useRef(null);
     
@@ -84,9 +87,18 @@ const Editor = () => {
             socketRef.current = await initSocket();
             // socketRef.current.emit(ACTIONS.JOIN)
           
-          socketRef.current.on(ACTIONS.RETURN, ({ success, output }) => {
-            if (success) setOutput(output);
-            else setOutput(output.stderr);
+          socketRef.current.on(ACTIONS.RETURN, ({ success, output, startedAt, endedAt }) => {
+            if (success) {
+              setOutput(output);
+              setSuccess(true);
+              const startDate = new Date(startedAt);
+              const endDate = new Date(endedAt);
+              setExecutionTime(differenceInMilliseconds(endDate, startDate));
+            }
+            else {
+              setOutput(output.stderr);
+              setSuccess(false);
+            }
             setLoading(false);
           });
         }
@@ -121,7 +133,6 @@ const Editor = () => {
     };
     
     const handleRun = () => {
-        // console.log(editor.current.getValue());
       setOutput("");
       setLoading(true);
         socketRef.current.emit(ACTIONS.RUN, {
@@ -146,7 +157,7 @@ const Editor = () => {
       </div>
 
       <textarea id="realtimeEditor"></textarea>
-      <Console output={output} loading={loading} />
+      <Console output={output} loading={loading} success={success} executionTime={executionTime} />
     </div>
   );
 };

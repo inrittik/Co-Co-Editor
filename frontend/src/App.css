@@ -42,17 +42,20 @@
   bottom: 0;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;
-  background-color: rgba(0, 0, 0, 0.717);
+  background-color: rgba(0, 0, 0, 0.957);
+  white-space: pre-wrap;
+  font-family: 'Courier New', monospace;
 }
 .console::-webkit-scrollbar {
   display: none;
 }
 .consoleBorder{
   background-color: #1c1e29;
-  height: 15px;
+  height: 20px;
   position: sticky;
   top: 0;
   cursor:grab;
+  box-shadow: 0px 3px 7px #36394e;
 }
 .consoleArea {
   padding: 10px;
@@ -68,4 +71,7 @@
   100% {
     opacity: 1;
   }
+}
+.errorInConsole{
+  color: #cc0000;
 }
