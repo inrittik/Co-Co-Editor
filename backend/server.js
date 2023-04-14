@@ -15,6 +15,7 @@ const {
   jsCodeRunner,
 } = require("./services/codeRunner");
 const roomRoutes = require("./routes/roomRoutes");
+const {mapUserToRoom, getCurrentUser, deleteUser} = require("./services/room.service");
 
 dotenv.config({ path: path.join(__dirname, `./.env`) });
 
@@ -24,7 +25,22 @@ const io = new Server(server);
 
 app.use(cors())
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
+  // Socket: Listening for disconnecting
+  socket.on("disconnecting", async () => {
+    const rooms = [...socket.rooms];
+    const user = await getCurrentUser(socket.id);
+    rooms.forEach((room) => {
+      socket.in(room).emit(ACTIONS.DISCONNECTED, {
+        socketId: socket.id,
+        user
+      })
+    })
+    await deleteUser(socket.id)
+    socket.leave()
+  });
+
+  // Socket: Listen for Code Run Events
   socket.on(ACTIONS.RUN, async ({ code, extension = "c" }) => {
     try {
       const filePath = await generateFile(code, extension);
@@ -50,6 +66,36 @@ io.on("connection", (socket) => {
       });
     }
   });
+
+  // Socket: Listen for Join Event
+  socket.on(ACTIONS.JOIN, async ({ roomId, username }) => {
+    socket.join(roomId);
+    const room = await mapUserToRoom(roomId, username, socket.id);
+    const users = room.users;
+    const currentUser = await getCurrentUser(socket.id);
+
+    users.forEach(({ socketId }) => {
+      io.to(socketId).emit(ACTIONS.JOINED, {
+        users,
+        currentUser,
+        socketId: socket.id,
+      });
+    });
+  });
+
+  // Socket: Listening for code sync
+  socket.on(ACTIONS.SYNC_CODE, ({ roomId, code }) => { 
+    socket.in(roomId).emit(ACTIONS.SYNC_CODE, {
+      socketId: socket.id,
+    })
+  })
+
+  // Socket: Listening for code changes
+  socket.on(ACTIONS.CODE_CHANGE, ({ roomId }) => {
+    socket.in(roomId).emit(ACTIONS.CODE_CHANGE, {
+      socketId: socket.id,
+    })
+  })
 });
 
 app.use('/room', roomRoutes);
