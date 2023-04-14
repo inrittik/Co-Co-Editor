@@ -122,15 +122,16 @@ const Editor = ({setClients}) => {
       socketRef.current.on(
         ACTIONS.JOINED,
         ({ users, currentUser, socketId }) => {
-          // console.log(socketId, users, currentUser);
+          console.log();
           if (socketId !== socketRef.current.id) {
             toast.success(`${currentUser.username} has joined the room`);
           }
           setClients(users);
 
           socketRef.current.emit(ACTIONS.SYNC_CODE, {
-          roomId,
-        });
+            socketId,
+            roomId
+          });
         }
       );
 
@@ -186,17 +187,15 @@ const Editor = ({setClients}) => {
       socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
         editor.current.setValue(code);
       });
-    }
-    
-    if (socketRef.current) {
+
       socketRef.current.on(ACTIONS.SYNC_CODE, ({ socketId }) => {
-        if (socketId === socketRef.current.id) {
+        if (socketRef.current.id !== socketId) {
           socketRef.current.emit(ACTIONS.CODE_CHANGE, {
             code: codeRef.current,
             roomId,
           });
         }
-      })
+      });
     }
 
   }, [socketRef.current])
@@ -219,6 +218,7 @@ const Editor = ({setClients}) => {
     socketRef.current.emit(ACTIONS.RUN, {
       code: editor.current.getValue(),
       extension: languages[lang].extension,
+      roomId
     });
   };
   return (

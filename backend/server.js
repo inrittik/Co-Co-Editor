@@ -41,7 +41,7 @@ io.on("connection", async (socket) => {
   });
 
   // Socket: Listen for Code Run Events
-  socket.on(ACTIONS.RUN, async ({ code, extension = "c" }) => {
+  socket.on(ACTIONS.RUN, async ({ roomId, code, extension = "c" }) => {
     try {
       const filePath = await generateFile(code, extension);
       let output;
@@ -53,14 +53,14 @@ io.on("connection", async (socket) => {
       else if (extension === "js") output = await jsCodeRunner(filePath);
 
       const endedAt = new Date();
-      io.to(socket.id).emit(ACTIONS.RETURN, {
+      io.in(roomId).emit(ACTIONS.RETURN, {
         output,
         success: true,
         startedAt,
         endedAt,
       });
     } catch (err) {
-      io.to(socket.id).emit(ACTIONS.RETURN, {
+      io.in(roomId).emit(ACTIONS.RETURN, {
         output: err,
         success: false,
       });
@@ -84,16 +84,16 @@ io.on("connection", async (socket) => {
   });
 
   // Socket: Listening for code sync
-  socket.on(ACTIONS.SYNC_CODE, ({ roomId, code }) => { 
-    socket.in(roomId).emit(ACTIONS.SYNC_CODE, {
-      socketId: socket.id,
-    })
+  socket.on(ACTIONS.SYNC_CODE, ({ socketId, roomId }) => { 
+      socket.to(roomId).emit(ACTIONS.SYNC_CODE, {
+        socketId,
+      });
   })
 
   // Socket: Listening for code changes
-  socket.on(ACTIONS.CODE_CHANGE, ({ roomId }) => {
+  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
     socket.in(roomId).emit(ACTIONS.CODE_CHANGE, {
-      socketId: socket.id,
+      code
     })
   })
 });
