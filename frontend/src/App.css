@@ -87,3 +87,60 @@
 .errorInConsole{
   color: #cc0000;
 }
+
+.homePage {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #1c1e29;
+  color: white;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+.formWrapper {
+  background-color: #282a36;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.formWrapper img {
+  height: 100px;
+  margin: auto;
+}
+.inputGrp {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  width: 90%;
+}
+.inputGrp input {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  margin-bottom: 10px;
+  background-color: antiquewhite;
+  font-weight: bold;
+}
+.btnGrp {
+margin-left: auto;
+}
+.btn {
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #14EDB9;
+  color: #1c1e29;
+  font-weight: bold;
+  margin: 0 5px;
+}
+.createRomm{
+  background-color: #14f091;
+}
