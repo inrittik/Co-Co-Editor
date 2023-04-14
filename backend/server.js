@@ -25,12 +25,6 @@ const io = new Server(server);
 
 app.use(cors())
 
-app.use("/room", roomRoutes);
-
-app.use(express.static('build'));
-app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
 
 io.on("connection", async (socket) => {
   // Socket: Listening for disconnecting
@@ -104,6 +98,9 @@ io.on("connection", async (socket) => {
     })
   })
 });
+
+
+app.use("/room", roomRoutes);
 
 const connectDataBase = async () => {
   try {
