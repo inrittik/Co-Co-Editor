@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "esbuild server.js --bundle --platform=node --target=node18 --outfile=build/main.js --minify"
   },
   "author": "",
   "license": "ISC",
