@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const [roomId, setRoomId] = useState('');
-    const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('');
     // const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate()
@@ -28,7 +28,7 @@ const Home = () => {
             console.log(username)
             navigate(`editor/${roomId}`, {
                 state: {
-                    username
+                username,
                 }
             })
         }
