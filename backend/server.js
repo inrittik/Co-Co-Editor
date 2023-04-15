@@ -44,21 +44,67 @@ io.on("connection", async (socket) => {
   // Socket: Listen for Code Run Events
   socket.on(ACTIONS.RUN, async ({ roomId, code, extension = "c" }) => {
     try {
-      const filePath = await generateFile(code, extension);
+      // const filePath = await generateFile(code, extension);
+      // let output;
+      let res;
+      if (extension === "c") {
+        try {
+          res = await cCodeRunner(code);
+        }
+        catch (err) {
+          res = err.response;
+        }
+      }
+      else if (extension === "cpp") {
+        try {
+          res = await cppCodeRunner(code);
+        }
+        catch (err) {
+          res = err.response;
+        }
+      }
+      else if (extension === "java") {
+        try {
+          res = await javaCodeRunner(code);
+        }
+        catch (err) {
+          res = err.response;
+        }
+      }
+      else if (extension === "py") {
+        try {
+          res = await pythonCodeRunner(code);
+        }
+        catch (err) {
+          res = err.response;
+        }
+      }
+      else if (extension === "js") {
+        try {
+          res = await jsCodeRunner(code);
+        }
+        catch (err) {
+          res = err.response;
+        }
+      }
       let output;
-      const startedAt = new Date();
-      if (extension === "c") output = await cCodeRunner(filePath);
-      else if (extension === "cpp") output = await cppCodeRunner(filePath);
-      else if (extension === "java") output = await javaCodeRunner(filePath);
-      else if (extension === "py") output = await pythonCodeRunner(filePath);
-      else if (extension === "js") output = await jsCodeRunner(filePath);
-
-      const endedAt = new Date();
+      let cpuTime;
+      let memory;
+      if (res.response?.data.error) {
+        output = res.response.data.output
+        cpuTime = null;
+        memory = null;
+      }
+      else {
+        output = res.data.output;
+        cpuTime = res.data.cpuTime;
+        memory = res.data.memory;
+      }
       io.in(roomId).emit(ACTIONS.RETURN, {
-        output,
+        output: output,
         success: true,
-        startedAt,
-        endedAt,
+        cpuTime: cpuTime,
+        memory: memory
       });
     } catch (err) {
       io.in(roomId).emit(ACTIONS.RETURN, {

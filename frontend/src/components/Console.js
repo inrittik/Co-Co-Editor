@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {format} from 'date-fns'
 
-const Console = ({output, loading, success, executionTime}) => {
+const Console = ({output, loading, success, executionTime, memory}) => {
   const [mousedown, setMousedown] = useState(false)
   const [consoleLog, setConsoleLog] = useState(output)
   const panelRef = useRef(null)
@@ -56,7 +55,12 @@ const Console = ({output, loading, success, executionTime}) => {
           {loading && <div className="loader"> ================= </div>}
           {consoleLog}
         </div>
-          {output.length>0 && success && !loading && <div>Execution Time: {format(executionTime, 'ms')}&nbsp;ms</div>}
+        {output.length > 0 && success && !loading && 
+          <div>
+            {executionTime && <div>Execution Time: {executionTime}&nbsp;s</div>}
+            {memory && <div>Memory: {memory}</div>}
+          </div>
+        }
       </div>
     );
 }

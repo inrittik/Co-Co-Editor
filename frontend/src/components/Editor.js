@@ -3,7 +3,6 @@ import { useLocation, useParams } from "react-router-dom";
 import { initSocket } from "../socket";
 import { ACTIONS } from "../Actions";
 import Codemirror from "codemirror";
-import { differenceInMilliseconds } from "date-fns";
 import {toast} from 'react-toastify'
 import Console from "../components/Console";
 import "codemirror/addon/edit/closetag";
@@ -79,7 +78,8 @@ const Editor = ({setClients}) => {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(true);
-  const [executionTime, setExecutionTime] = useState(0);
+  const [executionTime, setExecutionTime] = useState(null);
+  const [memory, setMemory] = useState(null)
 
   const location = useLocation();
   const { roomId } = useParams();
@@ -103,13 +103,12 @@ const Editor = ({setClients}) => {
       // Socket: Listen for Return on code execution
       socketRef.current.on(
         ACTIONS.RETURN,
-        ({ success, output, startedAt, endedAt }) => {
+        ({ success, output, cpuTime, memory }) => {
           if (success) {
             setOutput(output);
             setSuccess(true);
-            const startDate = new Date(startedAt);
-            const endDate = new Date(endedAt);
-            setExecutionTime(differenceInMilliseconds(endDate, startDate));
+            setExecutionTime(cpuTime);
+            setMemory(memory);
           } else {
             setOutput(output.stderr);
             setSuccess(false);
@@ -245,6 +244,7 @@ const Editor = ({setClients}) => {
         loading={loading}
         success={success}
         executionTime={executionTime}
+        memory={memory}
       />
     </div>
   );
