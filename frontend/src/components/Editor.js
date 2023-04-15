@@ -73,10 +73,10 @@ class HelloWorld{
   },
 ];
 
-const Editor = ({setClients}) => {
+const Editor = ({setClients, setIsLoading}) => {
   const [lang, setLang] = useState(0);
   const [output, setOutput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading of console output
   const [success, setSuccess] = useState(true);
   const [executionTime, setExecutionTime] = useState(null);
   const [memory, setMemory] = useState(null)
@@ -92,6 +92,8 @@ const Editor = ({setClients}) => {
     const init = async () => {
       // Socket: Initialization
       socketRef.current = await initSocket();
+
+      setIsLoading(true)
 
       // Socket: Emit join event
       socketRef.current.emit(ACTIONS.JOIN, {
@@ -131,6 +133,8 @@ const Editor = ({setClients}) => {
             socketId,
             roomId
           });
+
+          setIsLoading(false);
         }
       );
 

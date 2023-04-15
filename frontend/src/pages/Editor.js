@@ -4,10 +4,11 @@ import Client from '../components/Client';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import Loader from '../components/Loader';
+import PageLoader from '../components/PageLoader';
 
 const EditorPage = () => {
   const [clients, setClients] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { roomId } = useParams();
   const navigate = useNavigate()
@@ -40,27 +41,29 @@ const EditorPage = () => {
   }
 
   return (
-    <div className="editor_page">
-      <div className="sidebar">
-        <Loader />
-        <div className="collaborators">Collaborators</div>
-        <div className="clientList">
-          {clients.map((client) => {
-            return <Client {...client} />;
-          })}
+    <>
+      {isLoading && <PageLoader />}
+      <div className="editor_page">
+        <div className="sidebar">
+          <div className="collaborators">Collaborators</div>
+          <div className="clientList">
+            {clients.map((client) => {
+              return <Client {...client} />;
+            })}
 
-          <div className="btns">
-            <div className="btn copyBtn" onClick={handleCopy}>
-              Copy Room Id
-            </div>
-            <div className="btn leaveBtn" onClick={handleLeave}>
-              Leave Room
+            <div className="btns">
+              <div className="btn copyBtn" onClick={handleCopy}>
+                Copy Room Id
+              </div>
+              <div className="btn leaveBtn" onClick={handleLeave}>
+                Leave Room
+              </div>
             </div>
           </div>
         </div>
+        <Editor setClients={setClients} setIsLoading={ setIsLoading} />
       </div>
-      <Editor setClients={setClients} />
-    </div>
+    </>
   );
 }
 
