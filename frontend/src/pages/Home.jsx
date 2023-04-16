@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
+import Icon from "../assets/Icon.png"
 
 const Home = () => {
   const [roomId, setRoomId] = useState("");
@@ -51,7 +52,7 @@ const Home = () => {
   return (
     <div className="homePage">
       <div className="formWrapper">
-        <img src="./src/assets/Icon.png" alt="" />
+        <img src={Icon} alt="" />
         <div className="inputGrp">
           <input
             type="text"
