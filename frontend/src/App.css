@@ -31,8 +31,29 @@
   color: white;
   background-color: #14f091 !important;
 }
-.ide_space {
+.ide_container{
   width: 85%;
+  height: 100%;
+  display: flex;
+}
+.ide_space {
+  width: 75%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.input {
+  width: 25%;
+  height: 90%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+.input .CodeMirror {
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -88,6 +109,9 @@
   padding: 5px 10px;
   border-radius: 5px;
   color: #1c1e29;
+  position: absolute;
+  right: 0;
+  margin-right: 20px;
 }
 .editorOptions .run:hover{
   cursor: pointer;
@@ -99,6 +123,7 @@
   width: 85%;
   overflow-y: auto;
   position: absolute;
+  z-index: 5;
   bottom: 0;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;
@@ -252,4 +277,7 @@ display: flex;
   100% {
       transform: rotate(360deg);
   }
+}
+
+.input {
 }
