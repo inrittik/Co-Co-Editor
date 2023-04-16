@@ -42,14 +42,14 @@ io.on("connection", async (socket) => {
   });
 
   // Socket: Listen for Code Run Events
-  socket.on(ACTIONS.RUN, async ({ roomId, code, extension = "c" }) => {
+  socket.on(ACTIONS.RUN, async ({ roomId, code, extension = "c", input=null }) => {
     try {
       // const filePath = await generateFile(code, extension);
       // let output;
       let res;
       if (extension === "c") {
         try {
-          res = await cCodeRunner(code);
+          res = await cCodeRunner(code, input);
         }
         catch (err) {
           res = err.response;
@@ -57,7 +57,7 @@ io.on("connection", async (socket) => {
       }
       else if (extension === "cpp") {
         try {
-          res = await cppCodeRunner(code);
+          res = await cppCodeRunner(code, input);
         }
         catch (err) {
           res = err.response;
@@ -65,7 +65,7 @@ io.on("connection", async (socket) => {
       }
       else if (extension === "java") {
         try {
-          res = await javaCodeRunner(code);
+          res = await javaCodeRunner(code, input);
         }
         catch (err) {
           res = err.response;
@@ -73,7 +73,7 @@ io.on("connection", async (socket) => {
       }
       else if (extension === "py") {
         try {
-          res = await pythonCodeRunner(code);
+          res = await pythonCodeRunner(code, input);
         }
         catch (err) {
           res = err.response;
@@ -81,7 +81,7 @@ io.on("connection", async (socket) => {
       }
       else if (extension === "js") {
         try {
-          res = await jsCodeRunner(code);
+          res = await jsCodeRunner(code, input);
         }
         catch (err) {
           res = err.response;

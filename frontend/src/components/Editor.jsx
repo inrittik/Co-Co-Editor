@@ -5,6 +5,7 @@ import { ACTIONS } from "../Actions";
 import Codemirror from "codemirror";
 import { toast } from "react-toastify";
 import Console from "./Console";
+import Input from "./Input";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/lib/codemirror.css";
@@ -75,6 +76,7 @@ int main(){
 const Editor = ({ setClients, setIsLoading }) => {
   const [lang, setLang] = useState(0);
   const [output, setOutput] = useState("");
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false); // Loading of console output
   const [success, setSuccess] = useState(true);
   const [executionTime, setExecutionTime] = useState(null);
@@ -216,35 +218,39 @@ const Editor = ({ setClients, setIsLoading }) => {
     socketRef.current.emit(ACTIONS.RUN, {
       code: editor.current.getValue(),
       extension: languages[lang].extension,
+      input: input,
       roomId,
     });
   };
   return (
-    <div className="ide_space">
-      <div className="editorOptions">
-        <div className="language">
-          <label htmlFor="lang">Language:</label>
+    <div className="ide_container">
+      <div className="ide_space">
+        <div className="editorOptions">
+          <div className="language">
+            <label htmlFor="lang">Language:</label>
 
-          <select id="lang" onChange={handleLanguageChange}>
-            {languages.map((language, idx) => {
-              return <option value={idx}>{language.lang}</option>;
-            })}
-          </select>
+            <select id="lang" onChange={handleLanguageChange}>
+              {languages.map((language, idx) => {
+                return <option value={idx}>{language.lang}</option>;
+              })}
+            </select>
+          </div>
+
+          <button className="run" onClick={handleRun}>
+            ▶️ Run
+          </button>
         </div>
 
-        <button className="run" onClick={handleRun}>
-          ▶️ Run
-        </button>
+        <textarea id="realtimeEditor"></textarea>
+        <Console
+          output={output}
+          loading={loading}
+          success={success}
+          executionTime={executionTime}
+          memory={memory}
+        />
       </div>
-
-      <textarea id="realtimeEditor"></textarea>
-      <Console
-        output={output}
-        loading={loading}
-        success={success}
-        executionTime={executionTime}
-        memory={memory}
-      />
+      <Input setInput={setInput} />
     </div>
   );
 };
