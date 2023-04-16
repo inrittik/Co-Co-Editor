@@ -1,44 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import Editor from '../components/Editor'
-import Client from '../components/Client';
-import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import PageLoader from '../components/PageLoader';
+import React, { useEffect, useState } from "react";
+import Editor from "../components/Editor";
+import Client from "../components/Client";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import PageLoader from "../components/PageLoader";
 
 const EditorPage = () => {
   const [clients, setClients] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const { roomId } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     // verifies whether the roomId is valid
     const verifyRoom = async () => {
       try {
         await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/room/verify/${roomId}`
-      );
+          `${import.meta.env.VITE_BACKEND_URL}/room/verify/${roomId}`
+        );
+      } catch (err) {
+        toast.error(err.response.data.message);
+        navigate("/");
       }
-      catch (err) {
-        toast.error(err.response.data.message)
-        navigate('/')
-      }
-    }
+    };
 
-    verifyRoom()
-
-  }, [roomId])
+    verifyRoom();
+  }, [roomId]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(roomId)
+    navigator.clipboard.writeText(roomId);
     toast.success("RoomID copied to clipboard");
-  }
+  };
 
   const handleLeave = () => {
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   return (
     <>
@@ -61,10 +59,10 @@ const EditorPage = () => {
             </div>
           </div>
         </div>
-        <Editor setClients={setClients} setIsLoading={ setIsLoading} />
+        <Editor setClients={setClients} setIsLoading={setIsLoading} />
       </div>
     </>
   );
-}
+};
 
-export default EditorPage
+export default EditorPage;
