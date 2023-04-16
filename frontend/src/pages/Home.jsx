@@ -15,7 +15,7 @@ const Home = () => {
     if (isLoading) return;
     setIsLoading(true)
     const res = await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/room/create`
+      `${import.meta.env.VITE_BACKEND_URL}/room/create`
     );
     setRoomId(res.data.roomId);
     toast.success("Created new room");
@@ -29,7 +29,7 @@ const Home = () => {
     }
     try {
       await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/room/verify/${roomId}`
+        `${import.meta.env.VITE_BACKEND_URL}/room/verify/${roomId}`
       );
       navigate(`editor/${roomId}`, {
         state: {
@@ -51,7 +51,7 @@ const Home = () => {
   return (
     <div className="homePage">
       <div className="formWrapper">
-        <img src="./Icon.png" alt="" />
+        <img src="./src/assets/Icon.png" alt="" />
         <div className="inputGrp">
           <input
             type="text"

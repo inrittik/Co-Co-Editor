@@ -3,8 +3,8 @@ import { useLocation, useParams } from "react-router-dom";
 import { initSocket } from "../socket";
 import { ACTIONS } from "../Actions";
 import Codemirror from "codemirror";
-import {toast} from 'react-toastify'
-import Console from "../components/Console";
+import { toast } from "react-toastify";
+import Console from "./Console";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/lib/codemirror.css";
@@ -51,8 +51,7 @@ int main(){
     lang: "Java",
     mode: "clike",
     extension: "java",
-    value: `// Class with the main function should be named "HelloWorld"
-class HelloWorld{ 
+    value: `public class HelloWorld{ 
 
     public static void main(String[] args){
         System.out.println("Hello World!");
@@ -73,13 +72,13 @@ class HelloWorld{
   },
 ];
 
-const Editor = ({setClients, setIsLoading}) => {
+const Editor = ({ setClients, setIsLoading }) => {
   const [lang, setLang] = useState(0);
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false); // Loading of console output
   const [success, setSuccess] = useState(true);
   const [executionTime, setExecutionTime] = useState(null);
-  const [memory, setMemory] = useState(null)
+  const [memory, setMemory] = useState(null);
 
   const location = useLocation();
   const { roomId } = useParams();
@@ -93,7 +92,7 @@ const Editor = ({setClients, setIsLoading}) => {
       // Socket: Initialization
       socketRef.current = await initSocket();
 
-      setIsLoading(true)
+      setIsLoading(true);
 
       // Socket: Emit join event
       socketRef.current.emit(ACTIONS.JOIN, {
@@ -123,7 +122,6 @@ const Editor = ({setClients, setIsLoading}) => {
       socketRef.current.on(
         ACTIONS.JOINED,
         ({ users, currentUser, socketId }) => {
-          console.log();
           if (socketId !== socketRef.current.id) {
             toast.success(`${currentUser.username} has joined the room`);
           }
@@ -131,7 +129,7 @@ const Editor = ({setClients, setIsLoading}) => {
 
           socketRef.current.emit(ACTIONS.SYNC_CODE, {
             socketId,
-            roomId
+            roomId,
           });
 
           setIsLoading(false);
@@ -140,7 +138,6 @@ const Editor = ({setClients, setIsLoading}) => {
 
       // Socket: Listening for disconnect event
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, user }) => {
-        console.log(socketId, user);
         toast.success(`${user.username} has left the room`);
         setClients((prev) => {
           return prev.filter((client) => {
@@ -153,8 +150,8 @@ const Editor = ({setClients, setIsLoading}) => {
     init();
 
     return () => {
-      socketRef.current.close()
-    }
+      socketRef.current.close();
+    };
   }, []);
 
   useEffect(() => {
@@ -171,14 +168,13 @@ const Editor = ({setClients, setIsLoading}) => {
       );
 
       editor.current.on("change", (instance, change) => {
-        console.log(instance.getValue(), change);
         const code = instance.getValue();
         codeRef.current = code;
-        if (change.origin !== 'setValue') {
+        if (change.origin !== "setValue") {
           socketRef.current.emit(ACTIONS.CODE_CHANGE, {
             code,
-            roomId
-          })
+            roomId,
+          });
         }
       });
     }
@@ -200,8 +196,7 @@ const Editor = ({setClients, setIsLoading}) => {
         }
       });
     }
-
-  }, [socketRef.current])
+  }, [socketRef.current]);
 
   useEffect(() => {
     editor.current.setOption("mode", languages[lang].mode);
@@ -221,7 +216,7 @@ const Editor = ({setClients, setIsLoading}) => {
     socketRef.current.emit(ACTIONS.RUN, {
       code: editor.current.getValue(),
       extension: languages[lang].extension,
-      roomId
+      roomId,
     });
   };
   return (
